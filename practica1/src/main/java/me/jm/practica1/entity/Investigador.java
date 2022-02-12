@@ -22,8 +22,17 @@ public class Investigador {
   protected String nombre;
   protected String apellido;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "id_universidad")
+  @ManyToOne()
+  //@JoinColumn(name = "id")
   protected Universidad universidad;
 
+  @Override
+  public String toString() {
+    return "Investigador {" +
+        "id=" + id +
+        ", nombre=" + nombre +
+        ", apellido=" + apellido +
+        ", universidad=" + universidad +
+        "}";
+  }
 }
