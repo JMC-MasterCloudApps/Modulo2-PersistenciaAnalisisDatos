@@ -1,10 +1,11 @@
 package me.jm.practica1;
 
 import static java.time.LocalDate.of;
-import static java.util.Arrays.asList;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import me.jm.practica1.dto.Asistente;
+import me.jm.practica1.dto.AsistenteCongreso;
 import me.jm.practica1.dto.InvestigadoresPorUni;
 import me.jm.practica1.entity.Beca;
 import me.jm.practica1.entity.BecaBecado;
@@ -36,7 +37,7 @@ public class DataBaseLoader implements CommandLineRunner {
   }
 
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) {
 
     log("________________________________\nCreando universidades...");
     var ugr = new Universidad("Universidad de Granada", "Granada", "España");
@@ -91,6 +92,10 @@ public class DataBaseLoader implements CommandLineRunner {
     List<InvestigadoresPorUni> investigadoresPorUnis = investigadorRepo.findAllWithTypeAndUniversity();
     log("________________________________\nInvestigadores ordenados por universidad: ");
     imprime(investigadoresPorUnis.stream().map(InvestigadoresPorUni::getInvestigadorUniversidad).toList());
+
+    List<Asistente> asistentesCongreso = congresoRepo.findAsistentesByNombre(cngrs1.getNombre());
+    log("________________________________\nAsistentes a congreso: ");
+    imprime(asistentesCongreso.stream().map(AsistenteCongreso::build).toList());
   }
 
   private static void imprime(List datos) {
