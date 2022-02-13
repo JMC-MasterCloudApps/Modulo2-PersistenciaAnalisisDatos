@@ -16,11 +16,11 @@ public class BecaBecado {
   private BecaBecadoId id;
 
   @ManyToOne
-  @MapsId("becaId")
+  @MapsId("idBeca")
   private Beca beca;
 
   @ManyToOne
-  @MapsId("becadoId")
+  @MapsId("idBecado")
   private NoDoctor becado;
 
   public BecaBecado (Beca beca, NoDoctor becado) {

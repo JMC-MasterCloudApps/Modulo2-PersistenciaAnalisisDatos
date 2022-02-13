@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-public class BecaBecadoId implements Serializable {
+public class CongresoAsistenteId implements Serializable {
 
-  private long idBeca;
-  private long idBecado;
+  private long idCongreso;
+  private long idAsistente;
 
 }

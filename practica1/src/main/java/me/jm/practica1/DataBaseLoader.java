@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import me.jm.practica1.entity.Beca;
 import me.jm.practica1.entity.BecaBecado;
 import me.jm.practica1.entity.Congreso;
+import me.jm.practica1.entity.CongresoAsistente;
 import me.jm.practica1.entity.Doctor;
 import me.jm.practica1.entity.Investigador;
 import me.jm.practica1.entity.NoDoctor;
@@ -29,60 +30,21 @@ public class DataBaseLoader implements CommandLineRunner {
   final CongresoRepository congresoRepo;
   final InvestigadorRepository investigadorRepo;
 
-  @Override
-  public void run(String... args) throws Exception {
-
-//    crearBecas();
-//    crearCongresos();
-    crearInvestigadores();
-
-    List<Investigador> productos = investigadorRepo.findAll();
-    log("________________________________\nInvestigadores  findAll");
-    imprime(productos);
-  }
-
   public static void log(String message) {
     System.out.println(message);
   }
 
-  void crearUniversidades() {
-
-    log("Creando universidades...");
-    uniRepo.save(new Universidad("Universidad de Granada", "Granada", "España"));
-    uniRepo.save(new Universidad("Universidad Politécnica de Madrid", "Madrid", "España"));
-    uniRepo.save(new Universidad("Lappeenranta University of Technology", "Lappeenranta", "Finlandia"));
-  }
-
-  void crearBecas() {
-
-    log("Creando becas...");
-    becaRepo.save(new Beca("Beca Ramón y Cajal", 18500));
-    becaRepo.save(new Beca("Stephen Hawking", 85500));
-    becaRepo.save(new Beca("Fundación amigos de Donatello", 25100));
-  }
-
-  void crearCongresos() {
-
-    congresoRepo.save(new Congreso("Amigos de las matemáticas", "Cáceres", "España", of(2022, 3, 15), of(2022, 3, 17)));
-    congresoRepo.save(new Congreso("Thunderbolt congress", "Helsinki", "Finland", of(2022, 5, 1), of(2022, 5, 7)));
-    congresoRepo.save(new Congreso("WWW congress", "Las Vegas", "USA", of(2022, 11, 17), of(2022, 11, 23)));
-
-  }
-
-  void crearInvestigadores() {
+  @Override
+  public void run(String... args) throws Exception {
 
     log("________________________________\nCreando universidades...");
-    var ugr = uniRepo.save(new Universidad("Universidad de Granada", "Granada", "España"));
-    var upm = uniRepo.save(new Universidad("Universidad Politécnica de Madrid", "Madrid", "España"));
-    var lut = uniRepo.save(new Universidad("Lappeenranta University of Technology", "Lappeenranta", "Finlandia"));
+    var ugr = new Universidad("Universidad de Granada", "Granada", "España");
+    var upm = new Universidad("Universidad Politécnica de Madrid", "Madrid", "España");
+    var lut = new Universidad("Lappeenranta University of Technology", "Lappeenranta", "Finlandia");
 
+    uniRepo.saveAll(List.of(ugr, upm, lut));
 
-    log("________________________________\nCreando becas...");
-    var beca1 = new Beca("Beca Ramón y Cajal", 18500);
-    var beca2 = new Beca("Stephen Hawking", 85500);
-    var beca3 = new Beca("Fundación amigos de Donatello", 25100);
-
-    log("________________________________\nCreando investigadores...");
+    log("________________________________\nCreando becas, congresos e investigadores");
     var nDctr1 = new NoDoctor("Roberto", "Bernini", "Chem. 1742", ugr);
     var nDctr2 = new NoDoctor("Laura", "Dawson", "Metallic abrasion", lut);
     var nDctr3 = new NoDoctor("Ana", "Aguilera", "Worldwide travelling", ugr);
@@ -95,14 +57,34 @@ public class DataBaseLoader implements CommandLineRunner {
     var dctr3 = new Doctor("José", "Fajardo", "Ligamentos y tejidos tendiniosos", of(2011, 11, 11), "9.1", ugr);
     var dctr4 = new Doctor("Carol", "Johnson", "Bipolar behaviour", of(2019, 5, 22), "9.6", ugr);
 
+
+    var beca1 = new Beca("Beca Ramón y Cajal", 18500);
+    var beca2 = new Beca("Stephen Hawking", 85500);
+    var beca3 = new Beca("Fundación amigos de Donatello", 25100);
+
     nDctr1.setBecas(List.of(new BecaBecado(beca1, nDctr1)));
     nDctr2.setBecas(List.of(new BecaBecado(beca1, nDctr2), new BecaBecado(beca2, nDctr2)));
     nDctr5.setBecas(List.of(new BecaBecado(beca2, nDctr5), new BecaBecado(beca3, nDctr5)));
 
-    List<Investigador> investigadores = List.of(nDctr1, nDctr2, nDctr3, nDctr4, nDctr5, nDctr6,
+    List<Investigador> investigadores = List.of(
+        nDctr1, nDctr2, nDctr3, nDctr4, nDctr5, nDctr6,
         dctr1, dctr2, dctr3, dctr4);
 
+    var cngrs1 = new Congreso("Amigos de las matemáticas", "Cáceres", "España", of(2022, 3, 15), of(2022, 3, 17));
+    var cngrs2 = new Congreso("Thunderbolt congress", "Helsinki", "Finland", of(2022, 5, 1), of(2022, 5, 7));
+    var cngrs3 = new Congreso("WWW congress", "Las Vegas", "USA", of(2022, 11, 17), of(2022, 11, 23));
+
+    nDctr1.setCongresos(List.of(new CongresoAsistente(cngrs1, nDctr1)));
+    nDctr2.setCongresos(List.of(new CongresoAsistente(cngrs1, nDctr2), new CongresoAsistente(cngrs2, nDctr2)));
+    dctr1.setCongresos(List.of(new CongresoAsistente(cngrs1, dctr1), new CongresoAsistente(cngrs2, dctr1)));
+    dctr2.setCongresos(List.of(new CongresoAsistente(cngrs1, dctr2)));
+    dctr3.setCongresos(List.of(new CongresoAsistente(cngrs1, dctr3), new CongresoAsistente(cngrs2, dctr3), new CongresoAsistente(cngrs3, dctr3)));
+
     investigadorRepo.saveAll(investigadores);
+
+    List<Investigador> productos = investigadorRepo.findAll();
+    log("________________________________\nInvestigadores  findAll");
+    imprime(productos);
   }
 
   private static void imprime(List datos) {

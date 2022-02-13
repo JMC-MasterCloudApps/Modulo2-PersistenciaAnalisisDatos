@@ -1,18 +1,24 @@
 package me.jm.practica1.entity;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
+
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.Inheritance;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @NoArgsConstructor
+@Inheritance(strategy = TABLE_PER_CLASS)
 public class Investigador {
 
   @Id
@@ -22,9 +28,11 @@ public class Investigador {
   protected String nombre;
   protected String apellido;
 
-  @ManyToOne()
-  //@JoinColumn(name = "id")
+  @ManyToOne
   protected Universidad universidad;
+
+  @OneToMany(mappedBy = "congreso", cascade = ALL, orphanRemoval = true)
+  private List<CongresoAsistente> congresos = new ArrayList<>();
 
   @Override
   public String toString() {
