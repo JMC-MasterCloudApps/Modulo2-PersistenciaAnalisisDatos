@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import me.jm.practica1.dto.Asistente;
 import me.jm.practica1.dto.AsistenteCongreso;
 import me.jm.practica1.dto.AsistentesPorUniversidad;
+import me.jm.practica1.dto.BecasNoDoctor;
+import me.jm.practica1.dto.InfoBecas;
 import me.jm.practica1.dto.InvestigadoresPorUni;
 import me.jm.practica1.dto.RepresentacionUniversidad;
 import me.jm.practica1.entity.Beca;
@@ -48,6 +50,7 @@ public class DataBaseLoader implements CommandLineRunner {
     investigadoresPorUniversidad();
     asistentesACongreso(NOMBRE_CONGRESO);
     asistentesCongresoPorUniversidad(NOMBRE_CONGRESO);
+    becarios();
   }
 
   private static void imprime(List datos) {
@@ -123,7 +126,14 @@ public class DataBaseLoader implements CommandLineRunner {
 
   private void asistentesCongresoPorUniversidad(String congreso) {
     List<RepresentacionUniversidad> asistentesCongreso = congresoRepo.findAsistentesPorUniversidad(congreso);
-    log("________________________________\nAsistentes por universidad al congreso " + congreso + ":");
+    log("________________________________\nAsistentes por universidad al congreso '" + congreso + "':");
     imprime(asistentesCongreso.stream().map(AsistentesPorUniversidad::build).toList());
   }
+
+  private void becarios() {
+    List<InfoBecas> becarios = investigadorRepo.findBecasNoDoctores();
+    log("________________________________\nBecario, becas, dinero");
+    imprime(becarios.stream().map(BecasNoDoctor::build).toList());
+  }
+
 }
