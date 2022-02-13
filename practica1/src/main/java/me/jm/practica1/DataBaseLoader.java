@@ -6,7 +6,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import me.jm.practica1.dto.Asistente;
 import me.jm.practica1.dto.AsistenteCongreso;
+import me.jm.practica1.dto.AsistentesPorUniversidad;
 import me.jm.practica1.dto.InvestigadoresPorUni;
+import me.jm.practica1.dto.RepresentacionUniversidad;
 import me.jm.practica1.entity.Beca;
 import me.jm.practica1.entity.BecaBecado;
 import me.jm.practica1.entity.Congreso;
@@ -32,6 +34,8 @@ public class DataBaseLoader implements CommandLineRunner {
   final CongresoRepository congresoRepo;
   final InvestigadorRepository investigadorRepo;
 
+  private static final String NOMBRE_CONGRESO = "Amigos de las matemáticas";
+
   public static void log(String message) {
     System.out.println(message);
   }
@@ -39,6 +43,22 @@ public class DataBaseLoader implements CommandLineRunner {
   @Override
   public void run(String... args) {
 
+    creaDatos();
+
+    investigadoresPorUniversidad();
+    asistentesACongreso(NOMBRE_CONGRESO);
+    asistentesCongresoPorUniversidad(NOMBRE_CONGRESO);
+  }
+
+  private static void imprime(List datos) {
+
+    for (Object dato : datos) {
+      log(dato.toString());
+    }
+    log("");
+  }
+
+  private void creaDatos() {
     log("________________________________\nCreando universidades...");
     var ugr = new Universidad("Universidad de Granada", "Granada", "España");
     var upm = new Universidad("Universidad Politécnica de Madrid", "Madrid", "España");
@@ -72,7 +92,7 @@ public class DataBaseLoader implements CommandLineRunner {
         nDctr1, nDctr2, nDctr3, nDctr4, nDctr5, nDctr6,
         dctr1, dctr2, dctr3, dctr4);
 
-    var cngrs1 = new Congreso("Amigos de las matemáticas", "Cáceres", "España", of(2022, 3, 15), of(2022, 3, 17));
+    var cngrs1 = new Congreso(NOMBRE_CONGRESO, "Cáceres", "España", of(2022, 3, 15), of(2022, 3, 17));
     var cngrs2 = new Congreso("Thunderbolt congress", "Helsinki", "Finland", of(2022, 5, 1), of(2022, 5, 7));
     var cngrs3 = new Congreso("WWW congress", "Las Vegas", "USA", of(2022, 11, 17), of(2022, 11, 23));
 
@@ -87,49 +107,23 @@ public class DataBaseLoader implements CommandLineRunner {
     List<Investigador> investigadoresAll = investigadorRepo.findAll();
     log("________________________________\nInvestigadores  findAll");
     imprime(investigadoresAll);
+  }
 
-
+  private void investigadoresPorUniversidad() {
     List<InvestigadoresPorUni> investigadoresPorUnis = investigadorRepo.findAllWithTypeAndUniversity();
     log("________________________________\nInvestigadores ordenados por universidad: ");
     imprime(investigadoresPorUnis.stream().map(InvestigadoresPorUni::getInvestigadorUniversidad).toList());
+  }
 
-    List<Asistente> asistentesCongreso = congresoRepo.findAsistentesByNombre(cngrs1.getNombre());
-    log("________________________________\nAsistentes a congreso: ");
+  private void asistentesACongreso(String congreso) {
+    List<Asistente> asistentesCongreso = congresoRepo.findAsistentesByNombre(congreso);
+    log("________________________________\nAsistentes a congreso " + congreso + ":");
     imprime(asistentesCongreso.stream().map(AsistenteCongreso::build).toList());
   }
 
-  private static void imprime(List datos) {
-
-    for (Object dato : datos) {
-      log(dato.toString());
-    }
-    log("");
+  private void asistentesCongresoPorUniversidad(String congreso) {
+    List<RepresentacionUniversidad> asistentesCongreso = congresoRepo.findAsistentesPorUniversidad(congreso);
+    log("________________________________\nAsistentes por universidad al congreso " + congreso + ":");
+    imprime(asistentesCongreso.stream().map(AsistentesPorUniversidad::build).toList());
   }
-
-
-
-  /* 4.
-  (20%) Para cada investigador no doctor, mostrar su nombre y apellidos junto con el número de becas que ha percibido y la suma de dinero percibida.
-  Ojo, los que no tienen beca deben aparecer. Una manera de resolverlo es usando una unión.
-  SELECT i.nombre,
-          i.apellido,
-          count(b.id) as 'becas',
-          sum(b.cantidad) as 'dinero'
-  FROM test.investigador i,
-      test.beca b,
-      test.beca_becado bb
-  WHERE dtype = 'NoDoctor'
-      AND i.id = bb.becado_id
-      AND b.id = bb.beca_id
-  GROUP BY (i.id)
-  UNION
-  SELECT i2.nombre,
-          i2.apellido ,
-          0 as 'becas',
-          0 as 'dinero'
-  FROM test.investigador i2
-  WHERE i2.id NOT IN (SELECT bb2.becado_id FROM test.beca_becado bb2)
-  GROUP BY (i2.id)
-  ;
-   */
 }
