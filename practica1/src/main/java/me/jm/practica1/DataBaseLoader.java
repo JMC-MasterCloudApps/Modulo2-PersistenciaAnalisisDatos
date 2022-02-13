@@ -5,6 +5,7 @@ import static java.util.Arrays.asList;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import me.jm.practica1.dto.InvestigadoresPorUni;
 import me.jm.practica1.entity.Beca;
 import me.jm.practica1.entity.BecaBecado;
 import me.jm.practica1.entity.Congreso;
@@ -82,9 +83,14 @@ public class DataBaseLoader implements CommandLineRunner {
 
     investigadorRepo.saveAll(investigadores);
 
-    List<Investigador> productos = investigadorRepo.findAll();
+    List<Investigador> investigadoresAll = investigadorRepo.findAll();
     log("________________________________\nInvestigadores  findAll");
-    imprime(productos);
+    imprime(investigadoresAll);
+
+
+    List<InvestigadoresPorUni> investigadoresPorUnis = investigadorRepo.findAllWithTypeAndUniversity();
+    log("________________________________\nInvestigadores ordenados por universidad: ");
+    imprime(investigadoresPorUnis.stream().map(InvestigadoresPorUni::getInvestigadorUniversidad).toList());
   }
 
   private static void imprime(List datos) {
