@@ -28,4 +28,5 @@ hs_err_pid*
 practica1/.mvn/*
 practica1/*mvn*
 practica2/.idea/*
+practica2/target/*
 .dcignore
