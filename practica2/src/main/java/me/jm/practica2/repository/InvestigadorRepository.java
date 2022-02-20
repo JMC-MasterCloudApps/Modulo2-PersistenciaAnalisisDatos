@@ -15,21 +15,11 @@ public interface InvestigadorRepository extends JpaRepository<Investigador, Long
   List<Investigador> findAllBy();
 
   @Query(value = """
-    SELECT investigadorUniversidad
-    FROM (
-        SELECT concat(u.nombre, ' - ', d.nombre, ' ', d.apellido, ' (Doctor)')\s
-                as 'investigadorUniversidad',
-                u.nombre
-        FROM universidad u, doctor d
-        WHERE u.id = d.universidad_id\s
-        UNION\s
-        SELECT concat(u.nombre, ' - ', nd.nombre, ' ', nd.apellido, ' (NO Doctor)')\s
-                as 'investigadorUniversidad',
-                u.nombre
-        FROM universidad u, no_doctor nd
-        WHERE u.id = nd.universidad_id\s
-        ) as investigadores
-    order by investigadores.nombre
+    SELECT 	concat(u.nombre, ' - ', d.nombre, ' ', d.apellido, IF(d.formacion -> "$.titulo_doctorado" IS NULL, ' (Doctor)', ' (No Doctor)'))\s
+    	AS 'investigadorUniversidad'  \s
+    FROM universidad u, investigador d
+    WHERE u.id = d.universidad_id
+    ORDER BY investigadorUniversidad
   """, nativeQuery = true)
   List<InvestigadoresPorUni> findAllWithTypeAndUniversity();
 

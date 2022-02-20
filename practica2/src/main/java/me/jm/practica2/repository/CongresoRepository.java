@@ -20,13 +20,13 @@ public interface CongresoRepository extends JpaRepository<Congreso, Long> {
   List<Asistente> findAsistentesByNombre(String nombre);
 
   @Query(value = """
-        SELECT u.nombre, count(*) as numero
+        SELECT u.nombre, count(*) AS numero
         FROM congreso_asistente ca\s
-            join (SELECT d.id, d.universidad_id from doctor d UNION SELECT nd.id, nd.universidad_id from no_doctor nd) a
-            on a.id = ca.asistente_id\s
-            JOIN universidad u on a.universidad_id = u.id
+            JOIN (SELECT d.id, d.universidad_id FROM investigador d ) a
+            ON a.id = ca.asistente_id\s
+            JOIN universidad u ON a.universidad_id = u.id
         WHERE ca.congreso_id = (SELECT id FROM congreso c WHERE c.nombre = ?1)
-        group by u.nombre\s
+        GROUP BY u.nombre\s
         """, nativeQuery = true)
   List<RepresentacionUniversidad> findAsistentesPorUniversidad(String nombre);
 
