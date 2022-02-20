@@ -35,20 +35,14 @@ public interface InvestigadorRepository extends JpaRepository<Investigador, Long
 
   @Query(value = """
       SELECT nd.nombre,
-              nd.apellido,
-              count(b.id) as becas,
-              sum(b.cantidad) as dinero
-      FROM no_doctor nd\s
-          JOIN beca_becado bb ON nd.id = bb.becado_id
-          JOIN beca b ON b.id = bb.beca_id\s
-      GROUP BY (nd.id)
-      UNION\s
-      SELECT nd.nombre,
-              nd.apellido ,
-              0 as 'becas',
-              0 as 'dinero'
-      FROM no_doctor nd\s
-      WHERE nd.id NOT IN (SELECT bb2.becado_id FROM test.beca_becado bb2)
+             nd.apellido,
+             count(b.id) as becas,
+             IFNULL(sum(b.cantidad), 0) as dinero
+       FROM investigador nd
+             LEFT JOIN beca_becado bb ON nd.id = bb.becado_id
+             LEFT JOIN beca b ON b.id = bb.beca_id
+       WHERE formacion -> "$.titulo_doctorado" IS NOT NULL
+       GROUP BY (nd.id);
     """, nativeQuery = true)
   List<InfoBecas> findBecasNoDoctores();
 }
