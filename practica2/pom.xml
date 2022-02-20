@@ -29,12 +29,12 @@
 		</dependency>
 
 		<!-- Driver MySQL -->
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
 		<!-- Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -55,6 +55,13 @@
 			<artifactId>junit-jupiter</artifactId>
 			<version>${junit.jupiter.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- JSON -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20201115</version>
 		</dependency>
 
  		<!-- Flyway -->

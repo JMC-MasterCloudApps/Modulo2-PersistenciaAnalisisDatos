@@ -6,6 +6,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -27,6 +28,9 @@ public class Congreso {
   private String pais;
   private LocalDate fechaInicio;
   private LocalDate fechaFin;
+
+//  @Column(columnDefinition = "json")
+//  private String asistentes; //   {[1,2,4,5]}
 
   @OneToMany(mappedBy = "asistente", cascade = ALL, orphanRemoval = true)
   private List<CongresoAsistente> asistentes = new ArrayList<>();
