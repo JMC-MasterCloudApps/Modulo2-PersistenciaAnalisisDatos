@@ -11,6 +11,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InvestigadorRepository extends JpaRepository<Investigador, Long> {
 
+  @Query(value = "SELECT *, 0 AS clazz_ FROM investigador", nativeQuery = true)
+  List<Investigador> findAllBy();
+
   @Query(value = """
     SELECT investigadorUniversidad
     FROM (

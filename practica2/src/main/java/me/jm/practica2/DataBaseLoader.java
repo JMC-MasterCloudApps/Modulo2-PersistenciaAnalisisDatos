@@ -47,7 +47,7 @@ public class DataBaseLoader implements CommandLineRunner {
 
     //creaDatos();
 
-    List<Investigador> investigadoresAll = investigadorRepo.findAll();
+    List<Investigador> investigadoresAll = investigadorRepo.findAllBy();
     log("________________________________\nInvestigadores  findAll");
     imprime(investigadoresAll);
 
@@ -120,7 +120,7 @@ public class DataBaseLoader implements CommandLineRunner {
 
   private void asistentesACongreso(String congreso) {
     List<Asistente> asistentesCongreso = congresoRepo.findAsistentesByNombre(congreso);
-    log("________________________________\nAsistentes a congreso " + congreso + ":");
+    log("________________________________\nAsistentes a congreso '" + congreso + "':");
     imprime(asistentesCongreso.stream().map(AsistenteCongreso::build).toList());
   }
 

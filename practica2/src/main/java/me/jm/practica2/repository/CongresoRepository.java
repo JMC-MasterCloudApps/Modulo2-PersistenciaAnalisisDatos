@@ -12,11 +12,10 @@ import org.springframework.stereotype.Repository;
 public interface CongresoRepository extends JpaRepository<Congreso, Long> {
 
   @Query(value = """
-      select a.nombre, a.apellido
-      FROM congreso_asistente ca join\s
-          (SELECT id, nombre, apellido from doctor d UNION SELECT id, nombre, apellido from no_doctor nd) a
-          on a.id = ca.asistente_id\s
-      WHERE ca.congreso_id = (SELECT id FROM congreso c WHERE c.nombre = ?1);
+       SELECT i.nombre, i.apellido
+       FROM congreso c , investigador i\s
+       WHERE c.nombre = ?1
+       AND JSON_CONTAINS(c.asistentes, CAST(i.`id` AS json), '$')
       """, nativeQuery = true)
   List<Asistente> findAsistentesByNombre(String nombre);
 
